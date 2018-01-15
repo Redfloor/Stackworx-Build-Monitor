@@ -1,41 +1,32 @@
 import React, { Component } from 'react';
 import Server from './Server';
-import Cors
 
 export default class ServerList extends Component  {
   constructor(props) {
     super(props);
 
     this.state = { serverResponses: [] };
+    this.ServerCalls();
   }
     async ServerCalls() {
-     //   //const res = await fetch('https://test.cognition-app.com/api/status', { mode: 'no-cors'};
-      const serverListResponse = this.props.servers.map(async (server, index) => {
-        const res = await fetch(server, {method: 'GET'}).then ((server) => {
-           return (server);
-         }).catch((err) => {
-            return {
-              status: 400
-            };
-        });
-        //const output = <Server server={res.url} key={`${index}`} response={calls[`${index}`]} />
-        const output = <Server server={server} response={res.status} />
-       return output;
-     });
-     console.log(serverListResponse);
-     return serverListResponse;
+      const serverListResponse = await Promise.all(this.props.servers.map(async (server, index) => {
+        try {const res = await fetch(server, {method: 'GET'})
+          const output = {url: server, status: res.status, ok:res.ok };
+          return output;
+        } catch(err) {
+          return {url: server, status: 400, ok:false };
+        }
+      }));
+     this.setState({ serverResponses : serverListResponse }) ;
    }
 
    render() {
-      const calls = this.ServerCalls();
-      console.log(calls);
-      //calls.map((server, index, response) => console.log("Server: " + server + "\nIndex: " + index + "\nResponse: " + response));
-
-       const serverListHTML = this.props.servers.map((server, index) => <Server server={server} key={`${index}`} response={calls[`${index}`]} />)
+     const ServerListJSX = this.state.serverResponses.map((response, index) => {
+         return <Server key={`${response.url}-${index}`} response={response.status} server={response.url} ok={response.ok}/>
+     });
      return (
        <ul className="server-list">
-         {serverListHTML}
-
+          {ServerListJSX}
        </ul>
      );
    }

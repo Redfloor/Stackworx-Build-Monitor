@@ -2,6 +2,7 @@ import React from 'react';
 
 const Server = (props) => {
   // console.log("RESPONSE: " + props.response);
+  console.log(props);
   return (
     <li className="server-item">
       <p>{props.server}</p>
