@@ -52,6 +52,9 @@ h1, h2, h3, h4, h5, h6, p, li, span, a {
 .status-text.green {
   color:#5f4;
 }
+.status-text.orange{
+  color:#a45;
+}
 .status-text.grey {
   color:#679;
 }

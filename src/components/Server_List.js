@@ -14,7 +14,7 @@ export default class ServerList extends Component  {
           const output = {url: server, status: res.status, ok:res.ok };
           return output;
         } catch(err) {
-          return {url: server, status: 400, ok:false };
+          return { url: server, status: 400, ok:false };
         }
       }));
      this.setState({ serverResponses : serverListResponse }) ;
