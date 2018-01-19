@@ -6,7 +6,6 @@ export default class ServerList extends Component  {
     super(props);
 
     this.state = { serverResponses: [] };
-    this.ServerCalls();
   }
     async ServerCalls() {
       const serverListResponse = await Promise.all(this.props.servers.map(async (server, index) => {
@@ -19,7 +18,12 @@ export default class ServerList extends Component  {
       }));
      this.setState({ serverResponses : serverListResponse }) ;
    }
-
+   componentDidMount() {
+     this.checkTimer = setInterval(this.ServerCalls(), 300000);
+    }
+    componentWillUnmount() {
+      clearInterval(this.checkTimer);
+    }
    render() {
      const ServerListJSX = this.state.serverResponses.map((response, index) => {
          return <Server key={`${response.url}-${index}`} response={response.status} server={response.url} ok={response.ok}/>
