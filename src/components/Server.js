@@ -18,7 +18,8 @@ const serverItemColor = (response) => {
      }
      case 207:
      case 300:
-     case 0: {  //unspecified error
+     case 0:
+     case "loading": {  //unspecified error
         return "status-text grey";
      }
      default: { //fail

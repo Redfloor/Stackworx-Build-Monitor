@@ -7,6 +7,8 @@ export default class ServerList extends Component  {
 
     this.state = { serverResponses: [] };
   }
+
+
     async ServerCalls() {
       const serverListResponse = await Promise.all(this.props.servers.map(async (server, index) => {
         try {const res = await fetch(server, {method: 'GET'})
@@ -19,6 +21,15 @@ export default class ServerList extends Component  {
      this.setState({ serverResponses : serverListResponse }) ;
    }
    componentDidMount() {
+      const tempArr = [];
+      this.props.servers.forEach(server => {
+        const stateObj = Object.assign({}, server)
+        stateObj.url = server;
+        stateObj.status = "loading";
+        stateObj.ok = "unknown"
+        tempArr.push(stateObj);
+      })
+      this.setState({serverResponses: tempArr})
      this.checkTimer = setInterval(this.ServerCalls(), 300000);
     }
     componentWillUnmount() {
