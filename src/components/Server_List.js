@@ -6,8 +6,8 @@ export default class ServerList extends Component  {
     super(props);
 
     this.state = { serverResponses: [] };
+    this.forceObjects();
   }
-
 
     async ServerCalls() {
       const serverListResponse = await Promise.all(this.props.servers.map(async (server, index) => {
@@ -18,24 +18,31 @@ export default class ServerList extends Component  {
           return { url: server, status: 400, ok:false };
         }
       }));
-     this.setState({ serverResponses : serverListResponse }) ;
+     this.setState({ serverResponses : serverListResponse });
    }
-   componentDidMount() {
-      const tempArr = [];
-      this.props.servers.forEach(server => {
-        const stateObj = Object.assign({}, server)
-        stateObj.url = server;
-        stateObj.status = "loading";
-        stateObj.ok = "unknown"
-        tempArr.push(stateObj);
-      })
-      this.setState({serverResponses: tempArr})
+   forceObjects() {
+     const tempArr = [];
+     this.props.servers.forEach(server => {
+       const stateObj = Object.assign({}, server)
+       stateObj.url = server;
+       stateObj.status = "loading";
+       stateObj.ok = "unknown"
+       tempArr.push(stateObj);
+     })
+     this.setState({serverResponses: tempArr})
+   }
+
+   componentWillReceiveProps() {
+     this.forceObjects();
+   }
+   componentWillMount() {
      this.checkTimer = setInterval(this.ServerCalls(), 300000);
     }
     componentWillUnmount() {
       clearInterval(this.checkTimer);
     }
    render() {
+     console.log("New: ", this.props.servers);
      const ServerListJSX = this.state.serverResponses.map((response, index) => {
          return <Server key={`${response.url}-${index}`} response={response.status} server={response.url} ok={response.ok}/>
      });
