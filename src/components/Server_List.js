@@ -5,8 +5,7 @@ export default class ServerList extends Component  {
   constructor(props) {
     super(props);
 
-    this.state = { serverResponses: [] };
-    this.forceObjects();
+    this.state = { serverResponses: this.forceObjects() };
   }
 
     async ServerCalls() {
@@ -29,22 +28,26 @@ export default class ServerList extends Component  {
        stateObj.ok = "unknown"
        tempArr.push(stateObj);
      })
-     this.setState({serverResponses: tempArr})
+     return tempArr;
    }
 
-   componentWillReceiveProps() {
-     this.forceObjects();
-   }
    componentWillMount() {
      this.checkTimer = setInterval(this.ServerCalls(), 300000);
     }
     componentWillUnmount() {
       clearInterval(this.checkTimer);
     }
+
    render() {
-     console.log("New: ", this.props.servers);
-     const ServerListJSX = this.state.serverResponses.map((response, index) => {
-         return <Server key={`${response.url}-${index}`} response={response.status} server={response.url} ok={response.ok}/>
+     const ServerListJSX = this.props.servers.map((server, index) => {
+       return (
+         <Server
+          key={`${server.server}-${index}` }
+          server={server.server}
+          response={server.status}
+          updateServer = {(server) =>this.updateServer(server)}
+          />
+        );
      });
      return (
        <ul className="server-list">

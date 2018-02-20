@@ -1,4 +1,25 @@
-import React from 'react';
+import React, { Component } from 'react';
+
+export default class Server extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {};
+  }
+
+ render() {
+    //HERE IS THE GOLDEN SPOT
+  //  console.log(this.props);
+    const {response, server} = this.props;
+    return (
+      <li className="server-item">
+        <p>{server}</p>
+        <p>Status: <span className={serverItemColor(response)}>{response}</span></p>
+        <a href={server} target="_blank">Visit</a>
+      </li>
+    );
+  }
+}
 
 const serverItemColor = (response) => {
   switch(response) {
@@ -27,17 +48,3 @@ const serverItemColor = (response) => {
      }
    }
  }
-
-const Server = (props) => {
-  //HERE IS THE GOLDEN SPOT
-  const {response, server} = props;
-  return (
-    <li className="server-item">
-      <p>{server}</p>
-      <p>Status: <span className={serverItemColor(response)}>{response}</span></p>
-      <a href={server} target="_blank">Visit</a>
-    </li>
-  );
-}
-
-export default Server;

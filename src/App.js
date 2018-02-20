@@ -8,15 +8,29 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { servers: ['https://test.cognition-app.com/api/status', 'https://ord.dev.stackworx.io/health', 'https://api.durf.dev.stackworx.io/health', 'https://prima.run/health', 'https://stackworx.io/'] };
+    this.state = { servers: [
+      {server:'https://test.cognition-app.com/api/status', status:'loading', ok:'unknown'},
+      {server:'https://ord.dev.stackworx.io/health', status:'loading', ok:'unknown'},
+      {server:'https://api.durf.dev.stackworx.io/health', status:'loading', ok:'unknown'},
+      {server:'https://prima.run/health', status:'loading', ok:'unknown'},
+      {server:'https://stackworx.io/', status:'loading', ok:'unknown'}]
+    }
+      //Need to convert the above to a map.
   }
-  //We need to refactor this later on to include additive search. Let's start out with the 5 examples for now.
-  //this.setState({ servers: ['https://test.cognition-app.com/api/status', 'https://ord.dev.stackworx.io/health', 'https://api.durf.dev.stackworx.io/health', 'https://prima.run/health', 'https://stackworx.io/'] });
 
 addNewServer = (newServer) => {
     const tempServers = this.state.servers;
-    tempServers.push(newServer);
+    tempServers.push({server: newServer, status:'loading', ok:'unknown'});
     this.setState({servers:tempServers});
+}
+
+async updateServer(server) {
+    try {const res = await fetch(server, {method: 'GET'})
+      const output = {url: server, status: res.status, ok:res.ok };
+      return output;
+    } catch(err) {
+      return { url: server, status: 400, ok:false };
+    }
 }
 
   render() {
@@ -29,12 +43,15 @@ addNewServer = (newServer) => {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Build Monitor</h2>
         </div>
-        <p className="App-intro">
+        <div className="App-intro">
           <ServerControl
             addNewServer = {(newServer) => this.addNewServer(newServer)}
           />
-        </p>
-          <ServerList servers={ this.state.servers } />
+        </div>
+          <ServerList
+            servers={ this.state.servers }
+            updateServer = {(server) =>this.updateServer(server)}
+            />
       </div>
 
     );

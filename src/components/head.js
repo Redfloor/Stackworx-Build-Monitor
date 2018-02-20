@@ -15,7 +15,7 @@ const Head = () => {
     <meta name="theme-color" content="#000000">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <title>React App</title>
+    <title>Dylan&#39;s Reactive Playground</title>
   }
 );
 
